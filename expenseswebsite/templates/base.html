@@ -12,7 +12,7 @@
     <link
       href="{% static 'css/bootstrap.min.css' %}"
       rel="stylesheet"
-      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      {% comment %} integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" {% endcomment %}
       crossorigin="anonymous"
     />
 
@@ -43,7 +43,7 @@
         {% include 'partials/_sidebar.html' %}
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-          {% block content %} {% endblock %}
+          {% block content %}  {% endblock %}
         </main>
       </div>
     </div>
