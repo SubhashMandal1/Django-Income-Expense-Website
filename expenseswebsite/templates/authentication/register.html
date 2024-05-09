@@ -1,4 +1,4 @@
-{% extends "base_auth.html" %} {% block content %}
+{% extends "base_auth.html" %} {% load static %} {% block content %}
 
 <div class="row">
   <div class="col-md-4"></div>
@@ -49,5 +49,5 @@
   </div>
   <div class="col-md-4"></div>
 </div>
-
+<script src="{% static "js/register.js "%}"></script>
 {% endblock content %}
