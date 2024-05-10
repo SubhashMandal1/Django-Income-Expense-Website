@@ -37,7 +37,7 @@ class RegistrationView(View):
         return render(request,'authentication/register.html')
     
     def post(self, request):
-        messages.success(request,"Success Something")
+  
         return render(request,'authentication/register.html')
      
 
