@@ -10,7 +10,7 @@
         </div>
         <form action="{% url 'register' %}" method="post">
           {% csrf_token %}
-          
+
           {% include "partials/_messages.html" %}
 
           <div class="form-group">
@@ -20,6 +20,7 @@
               placeholder="Username"
               id="usernameField"
               class="form-control form-control-sm"
+              value= "{{fieldValues.username}}"
             />
           </div>
           <div class="invalid-feedback invalid_feedback" style="display:none">
@@ -33,6 +34,7 @@
               placeholder="Email"
               id="emailField"
               class="form-control form-control-sm"
+              value="{{fieldValues.email}}"
             />
           </div>
           <div class="emailFeedBackArea invalid-feedback" style="display:none">
@@ -52,7 +54,7 @@
           <input
             type="submit"
             value="Register"
-            class="btn btn-block btn-primary"
+            class="btn btn-block btn-primary submit-btn"
           />
         </form>
       </div>
