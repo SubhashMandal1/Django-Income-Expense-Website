@@ -94,4 +94,29 @@ class RegistrationView(View):
 
 class VerificationView(View):
     def get(self,request,uidb64,token):
+        
+        try:
+            id=force_str(urlsafe_base64_decode(uidb64))
+            user=User.objects.get(pk=id)
+            
+            if not token_generator.check_token(user,token):
+                return redirect('login'+'?message='+'User already activated')
+            
+            if user.is_active:
+                return redirect('login')
+            user.is_active=True
+            user.save()
+            
+            messages.success(request,"Account activated successfully.")
+            return redirect('login')
+            
+        except Exception as ex:
+            pass
+        
         return redirect('login')
+        
+        
+    
+class LoginView(View):
+    def get(self, request):
+        return render(request,'authentication/login.html')
