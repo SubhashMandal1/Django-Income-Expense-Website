@@ -1,17 +1,21 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<h1>Expenses list</h1>
+{% extends "base.html" %} {% block content %}
 
-<ul class="list-group">
-  <li class="list-group-item">Bought Beer</li>
-  <li class="list-group-item">Bought Beer</li>
-  <li class="list-group-item">Bought Beer</li>
-  <li class="list-group-item">Bought Beer</li>
-  <li class="list-group-item">Bought Beer</li>
-  <li class="list-group-item">Bought Beer</li>
-  <li class="list-group-item">Bought Beer</li>
-  <li class="list-group-item">Bought Beer</li>
-  <li class="list-group-item">Bought Beer</li>
-  <li class="list-group-item">Bought Beer</li>
-  <li class="list-group-item">Bought Beer</li>
-</ul>
-{% endblock content %}
+<div class="container">
+  {% include "partials/_messages.html" %}
+  <h1>Expenses list</h1>
+
+  <ul class="list-group">
+    <li class="list-group-item">Bought Beer</li>
+    <li class="list-group-item">Bought Beer</li>
+    <li class="list-group-item">Bought Beer</li>
+    <li class="list-group-item">Bought Beer</li>
+    <li class="list-group-item">Bought Beer</li>
+    <li class="list-group-item">Bought Beer</li>
+    <li class="list-group-item">Bought Beer</li>
+    <li class="list-group-item">Bought Beer</li>
+    <li class="list-group-item">Bought Beer</li>
+    <li class="list-group-item">Bought Beer</li>
+    <li class="list-group-item">Bought Beer</li>
+  </ul>
+  {% endblock content %}
+</div>
