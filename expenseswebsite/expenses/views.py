@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Category, Expense
 from django.contrib import messages
@@ -8,7 +8,12 @@ from django.contrib import messages
 @login_required(login_url='/authentication/login')
 def index(request):
     categories=Category.objects.all()
-    return render(request, 'expenses/index.html')
+    expenses = Expense.objects.filter(owner=request.user)
+    context = {
+        'expenses': expenses,
+    }
+    
+    return render(request, 'expenses/index.html',context)
 
 def add_expense(request):
     categories=Category.objects.all()
@@ -25,3 +30,16 @@ def add_expense(request):
         if not amount:
             messages.error(request, 'Amount is requeired' )
             return render(request, 'expenses/add_expense.html',context)
+        description = request.POST['description']
+        date = request.POST['expense_date']
+        category = request.POST['category']
+
+        if not description:
+            messages.error(request, 'description is required')
+            return render(request, 'expenses/add_expense.html', context)
+        
+        Expense.objects.create(owner=request.user, amount=amount, date=date,
+                               category=category, description=description)
+        messages.success(request, 'Expense saved successfully')
+
+        return redirect('expenses')
