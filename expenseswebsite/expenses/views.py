@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Category, Expense
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+from userpreferences.models import UserPreference
 
 # Create your views here.
 
@@ -9,12 +12,19 @@ from django.contrib import messages
 def index(request):
     categories=Category.objects.all()
     expenses = Expense.objects.filter(owner=request.user)
+    paginator = Paginator(expenses, 5)
+    page_number = request.GET.get('page')
+    page_obj = Paginator.get_page(paginator, page_number)
+    currency = UserPreference.objects.get(user=request.user).currency
     context = {
         'expenses': expenses,
+        'page_obj': page_obj,
+        'currency': currency
     }
     
     return render(request, 'expenses/index.html',context)
 
+@login_required(login_url='/authentication/login')
 def add_expense(request):
     categories=Category.objects.all()
     context={
@@ -44,7 +54,8 @@ def add_expense(request):
 
         return redirect('expenses')
     
-
+    
+@login_required(login_url='/authentication/login')
 def expense_edit(request, id):
     expense = Expense.objects.get(pk=id)
     categories = Category.objects.all()
@@ -80,3 +91,9 @@ def expense_edit(request, id):
 
         return redirect('expenses')
         
+        
+def delete_expense(request, id):
+    expense = Expense.objects.get(pk=id)
+    expense.delete()
+    messages.success(request, 'Expense removed')
+    return redirect('expenses')
