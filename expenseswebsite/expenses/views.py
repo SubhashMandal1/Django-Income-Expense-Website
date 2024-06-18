@@ -54,7 +54,7 @@ def add_expense(request):
         amount= request.POST['amount']
     
         if not amount:
-            messages.error(request, 'Amount is requeired' )
+            messages.error(request, 'Amount is required' )
             return render(request, 'expenses/add_expense.html',context)
         description = request.POST['description']
         date = request.POST['expense_date']

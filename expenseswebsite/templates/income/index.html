@@ -15,12 +15,12 @@
     </div>
 
     <div class="col-md-2">
-      <a href="{% url 'add-expenses'%}" class="btn btn-primary">Add Expense</a>
+      <a href="{% url 'add-income'%}" class="btn btn-primary">Add Income</a>
     </div>
   </div>
 
-  <div class="container">
-    {% include 'partials/_messages.html' %} {% if expenses.count %}
+  {% comment %} <div class="container">
+    {% include 'partials/_messages.html' %} {% if income.count %}
 
     <div class="row">
       <div class="col-md-8"></div>
@@ -40,7 +40,7 @@
         <thead>
           <tr>
             <th>Amount ({{currency}})</th>
-            <th>Category</th>
+            <th>Source</th>
             <th>Description</th>
             <th>Date</th>
             <th></th>
@@ -115,9 +115,9 @@
       </ul>
       {% endif %}
     </div>
-  </div>
+  </div> {% endcomment %}
 </div>
 
-<script src="{% static 'js/searchExpenses.js' %}"></script>
+<script src="{% static 'js/searchIncome.js' %}"></script>
 
 {% endblock content %}
