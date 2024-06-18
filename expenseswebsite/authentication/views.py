@@ -132,7 +132,7 @@ class LoginView(View):
             if user:
                 if user.is_active:
                     auth.login(request,user)
-                    messages.success(request,"Welcome, "+user.username+'you are now logged in')
+                    messages.success(request,"Welcome ,"+user.username+' you are now logged in')
                     return redirect('expenses')
                 messages.error(request,'Account is not active, please check your email')
                 return render(request,'authentication/login.html')
@@ -145,5 +145,5 @@ class LoginView(View):
 class LogoutView(View):
     def post(self, request):
         auth.logout(request)
-        messages.success(request,' You have been logged out')
+        messages.success(request,'You have been logged out')
         return redirect('login')

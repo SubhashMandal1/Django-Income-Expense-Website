@@ -31,7 +31,11 @@ def index(request):
     paginator = Paginator(expenses, 5)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
-    currency = UserPreference.objects.get(user=request.user).currency
+    # currency = UserPreference.objects.get(user=request.user).currency
+    try:
+        currency = UserPreference.objects.get(user = request.user).currency
+    except UserPreference.DoesNotExist:
+        currency = 'INR - Indian Rupee'
     context = {
         'expenses': expenses,
         'page_obj': page_obj,

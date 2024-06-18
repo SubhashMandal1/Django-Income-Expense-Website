@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  {% comment %} <div class="container">
+  <div class="container">
     {% include 'partials/_messages.html' %} {% if income.count %}
 
     <div class="row">
@@ -48,16 +48,16 @@
         </thead>
 
         <tbody>
-          {% for expense in page_obj%}
+          {% for income in page_obj%}
           <tr>
-            <td>{{expense.amount}}</td>
-            <td>{{expense.category}}</td>
-            <td>{{expense.description}}</td>
-            <td>{{expense.date}}</td>
+            <td>{{income.amount}}</td>
+            <td>{{income.source}}</td>
+            <td>{{income.description}}</td>
+            <td>{{income.date}}</td>
 
             <td>
               <a
-                href="{% url 'expense-edit' expense.id  %}"
+                href="{% url 'income-edit' income.id  %}"
                 class="btn btn-secondary btn-sm"
                 >Edit</a
               >
@@ -75,7 +75,7 @@
         <thead>
           <tr>
             <th>Amount ({{currency}})</th>
-            <th>Category</th>
+            <th>Source</th>
             <th>Description</th>
             <th>Date</th>
             <th></th>
@@ -115,7 +115,7 @@
       </ul>
       {% endif %}
     </div>
-  </div> {% endcomment %}
+  </div>
 </div>
 
 <script src="{% static 'js/searchIncome.js' %}"></script>
