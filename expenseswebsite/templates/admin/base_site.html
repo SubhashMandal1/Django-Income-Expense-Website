@@ -1,1 +1,12 @@
-{% extends "admin/base.html" %} {% load static %}
+{% extends "admin/base.html" %} {% load static %} {% block branding %}
+
+<h1 id="head">
+  <img src="{%static 'img/logo.png'%}" alt="" width="45" height="45" />
+  MoneyMap
+</h1>
+
+{% endblock %} {% block extrastyle %}
+
+<link rel="stylesheet" href="{%static 'css/adminstyle.css'%}" />
+
+{% endblock %}
