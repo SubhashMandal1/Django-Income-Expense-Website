@@ -12,6 +12,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from .utils import token_generator
 from django.contrib import auth
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 # Create your views here.
 
@@ -156,4 +157,46 @@ class RequestPasswordResetEmail(View):
         
         email=request.POST['email']
         
+        context={
+            'values':request.POST
+        }
+        
+        if not validate_email(email):
+            messages.error(request, "Please supply a valid email")
+            return render(request, 'authentication/reset-password.html',context)
+        
+        user=request.objects.filter(email=email)  
+        domain=get_current_site(request).domain
+        
+        if user.exists():
+            
+            email_contents={
+                'user':user[0],
+                'domain':domain.domain,
+                'uid':urlsafe_base64_encode(force_bytes(user[0].pk)),
+                'token':PasswordResetTokenGenerator().make_token(user[0]),
+            }
+            
+            uidb64=urlsafe_base64_encode(force_bytes(user.pk))
+            link=reverse('reset-user-password',kwargs={'uidb64':email_contents['uid'],'token':email_contents['token']})
+                    
+            reset_url='http://'+domain+link
+            
+            email_subject='Password Reset Instructions'
+            email_body='Hi there, Please use this link to reset your password.\n' +reset_url,
+            email = EmailMessage(
+                email_subject,
+                email_body,
+                "noreply@semycolon.com",
+                [email],
+                )
+            email.send(fail_silently=False)
+        messages.success(request,'We have sent you an email to reset password.')  
+        
+        
         return render(request, 'authentication/reset-password.html')
+    
+    
+class CompletePasswordReset(View):
+    def get(self,request):
+        return render(request,'authentication/set-new-password.html')
