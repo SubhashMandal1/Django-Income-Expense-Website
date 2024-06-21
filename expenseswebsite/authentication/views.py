@@ -165,25 +165,25 @@ class RequestPasswordResetEmail(View):
             messages.error(request, "Please supply a valid email")
             return render(request, 'authentication/reset-password.html',context)
         
-        user=request.objects.filter(email=email)  
-        domain=get_current_site(request).domain
+        user = User.objects.filter(email=email)  
+        current_domain=get_current_site(request).domain
         
         if user.exists():
             
             email_contents={
                 'user':user[0],
-                'domain':domain.domain,
+                'domain':current_domain,
                 'uid':urlsafe_base64_encode(force_bytes(user[0].pk)),
                 'token':PasswordResetTokenGenerator().make_token(user[0]),
             }
             
-            uidb64=urlsafe_base64_encode(force_bytes(user.pk))
+            # uidb64=urlsafe_base64_encode(force_bytes(user.pk))
             link=reverse('reset-user-password',kwargs={'uidb64':email_contents['uid'],'token':email_contents['token']})
                     
-            reset_url='http://'+domain+link
+            reset_url='http://'+current_domain+link
             
             email_subject='Password Reset Instructions'
-            email_body='Hi there, Please use this link to reset your password.\n' +reset_url,
+            email_body='Hi there, Please use this link to reset your password.\n' +reset_url
             email = EmailMessage(
                 email_subject,
                 email_body,
@@ -198,5 +198,52 @@ class RequestPasswordResetEmail(View):
     
     
 class CompletePasswordReset(View):
-    def get(self,request):
-        return render(request,'authentication/set-new-password.html')
+    def get(self,request, uidb64, token):
+        
+        context={
+            'uidb64':uidb64,
+            'token':token
+        }
+        
+        try:
+            user_id=force_str(urlsafe_base64_decode(uidb64))
+            user=User.objects.get(pk=user_id)
+            if not PasswordResetTokenGenerator().check_token(user,token):
+                messages.info(request, 'Password link is invalid, please request a new one')
+                return render(request, 'authentication/reset-password.html')
+        except Exception as identifier:
+            pass
+        
+        return render(request,'authentication/set-new-password.html',context)
+    
+    def post(self, request, uidb64, token):
+        
+        context={
+            'uidb64':uidb64,
+            'token':token
+        }
+        
+        password=request.POST['password']
+        password2=request.POST['password2']
+        
+        if password!=password2:
+            messages.error(request,'Passowrds do not match')
+            return render(request,'authentication/set-new-password.html',context)
+        
+        if len(password)<6:
+            messages.error(request,'Passowrds too short')
+            return render(request,'authentication/set-new-password.html',context)
+        
+        try:
+            user_id=force_str(urlsafe_base64_decode(uidb64))
+            user=User.objects.get(pk=user_id)
+            user.set_password(password)
+            user.save()
+            
+            messages.success(request, 'Password reset Successfull, you can login with your new password.')
+            
+            return redirect('login')
+        except Exception as identifier:
+            messages.error(request, 'Something went wrong,try again')
+            return render(request,'authentication/set-new-password.html',context)
+        
